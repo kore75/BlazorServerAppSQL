@@ -1,0 +1,28 @@
+﻿@page "/userdatagrid"
+@using BlazorServerAppSQL.Components
+
+
+@inject BookingDataContext Context
+<h3>UserDataGrid</h3>
+
+<SfGrid DataSource="@UserDatas" AllowPaging="true" AllowFiltering="true" AllowGrouping="true" AllowSorting="true" Toolbar="@ToolbarItems">
+    <SfDataManager  Adaptor="Adaptors.CustomAdaptor">
+        <UserDataComponent />         
+    </SfDataManager>
+    <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true"></GridEditSettings>
+</SfGrid>
+
+@code {
+    private List<string> ToolbarItems = new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel" };
+
+    public List<UserData> UserDatas { get; set; } = new List<UserData>();
+   
+
+    protected override Task OnInitializedAsync()
+    {       
+        return base.OnInitializedAsync();
+    }
+
+   
+
+}
