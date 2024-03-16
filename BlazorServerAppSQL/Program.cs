@@ -1,9 +1,9 @@
 using BlazorServerAppSQL.Data;
 using BlazorServerAppSQL.Model;
-using BlazorSQLData.Model;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.EntityFrameworkCore;
 using Syncfusion.Blazor;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSyncfusionBlazor();
@@ -22,7 +22,12 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddDbContext<BookingDataContext>(options=>options.UseSqlite(builder.Configuration.GetConnectionString("SqlLite")));
+
+builder.Services.AddQuickGridEntityFrameworkAdapter();;
 builder.Services.AddTransient<DbInitialiser>();
+
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 var app = builder.Build();
 
@@ -51,6 +56,8 @@ using (var scope = app.Services.CreateScope())
     var service=scope.ServiceProvider.GetService<DbInitialiser>();
     service?.Run();
 }
+
+//app.MapRazorComponents<App>();
 
 
 app.Run();

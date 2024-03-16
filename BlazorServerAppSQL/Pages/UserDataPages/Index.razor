@@ -1,0 +1,26 @@
+﻿@page "/userdata"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject BlazorServerAppSQL.Model.BookingDataContext DB
+@using BlazorServerAppSQL.Model
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="userdata/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="DB.UserDatas">
+    <PropertyColumn Property="userdata => userdata.FullName" />
+    <PropertyColumn Property="userdata => userdata.Email" />
+    <PropertyColumn Property="userdata => userdata.EmploymentDate" />
+    <PropertyColumn Property="userdata => userdata.Salary" />
+    <PropertyColumn Property="userdata => userdata.UserCategory_Id" />
+
+    <TemplateColumn Context="userdata">
+        <a href="@($"userdata/edit?userdataid={userdata.UserDataId}")">Edit</a> |
+        <a href="@($"userdata/details?userdataid={userdata.UserDataId}")">Details</a> |
+        <a href="@($"userdata/delete?userdataid={userdata.UserDataId}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>

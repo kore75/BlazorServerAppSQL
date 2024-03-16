@@ -1,13 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BlazorServerAppSQL.Model;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 
-namespace BlazorSQLData.Model;
+namespace BlazorServerAppSQL.Model;
 
 public class BookingDataContext: DbContext
 {
     public string? DbPath { get; } = null;
 
     public DbSet<UserData> UserDatas { get; set; }
+
+    public DbSet<UserCategory> UserCategories { get; set; }
 
     public BookingDataContext()
     {
@@ -22,9 +25,18 @@ public class BookingDataContext: DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<UserData>()
-            .Property(e => e.UserDataId)
-            .ValueGeneratedOnAdd();
+        modelBuilder.Entity<UserData>(build =>
+        {
+            build.Property(e => e.UserDataId).ValueGeneratedOnAdd();
+            build.HasOne<UserCategory>().WithMany().HasForeignKey(x => x.UserCategory_Id);
+        });
+
+        modelBuilder.Entity<UserCategory>(build =>
+        {
+            build.Property(e => e.UserCategoryId).ValueGeneratedOnAdd();
+        });
+        
+
         base.OnModelCreating(modelBuilder);
     }
 

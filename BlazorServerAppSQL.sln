@@ -7,6 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServerAppSQL", "Blazo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Projektmappenelemente", "{ABF4B442-21DE-4AFB-909B-FBEDAB813F8B}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject

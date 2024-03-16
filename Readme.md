@@ -22,3 +22,7 @@ For Data Interaction the UserDataComponent is used.
 This compoment supports filtering,crude operations, grouping, sorting and filtering.
 Another reason is that di can only be used this way, in regards of the documentation.
 
+### Quick Grip
+The .NET 8 Quick was created using the scaffolding function.
+
+

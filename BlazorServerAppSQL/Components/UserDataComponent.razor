@@ -1,4 +1,5 @@
 ﻿@using Microsoft.EntityFrameworkCore
+@using System.Collections
 @inherits DataAdaptor
 @inject BookingDataContext Context
 
@@ -9,11 +10,18 @@
     }
 
 
-    public async override Task<object> ReadAsync(DataManagerRequest dataManagerRequest, string additionalParam = null)
+    public async override Task<object> ReadAsync(DataManagerRequest dataManagerRequest, string additionalParam = "")
     {
         int TotalRecordsCount = await Context.UserDatas.AsNoTracking().CountAsync();
-        var userDatas = Context.UserDatas.AsNoTracking();
+        IQueryable<UserData> userDatas = Context.UserDatas.AsNoTracking();
 
+        
+
+        if (dataManagerRequest.Search != null && dataManagerRequest.Search.Count > 0)
+        {
+            // Searching
+            userDatas = DataOperations.PerformSearching(userDatas, dataManagerRequest.Search);
+        }
 
         if (dataManagerRequest.Where != null && dataManagerRequest.Where.Count > 0)
         {
@@ -40,9 +48,9 @@
             // Taking
             userDatas = DataOperations.PerformTake(userDatas, dataManagerRequest.Take);
             //Add custom logic here if needed and remove above method
-        }
+        }       
 
-        return dataManagerRequest.RequiresCounts ? new DataResult() { Result = userDatas, Count = TotalRecordsCount } : (object)userDatas;
+        return dataManagerRequest.RequiresCounts ? new DataResult() { Result = userDatas, Count = TotalRecordsCount } : (object)(userDatas);
     }
 
     public override async Task<object> InsertAsync(DataManager dataManager, object record, string additionalParam)

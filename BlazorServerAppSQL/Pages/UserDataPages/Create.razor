@@ -1,0 +1,63 @@
+﻿@page "/userdata/create"
+@inject BlazorServerAppSQL.Model.BookingDataContext DB
+@using BlazorServerAppSQL.Model
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>UserData</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="UserData" OnValidSubmit="AddUserData" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="fullname" class="form-label">FullName:</label> 
+                <InputText id="fullname" @bind-Value="UserData.FullName" class="form-control" /> 
+                <ValidationMessage For="() => UserData.FullName" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label> 
+                <InputText id="email" @bind-Value="UserData.Email" class="form-control" /> 
+                <ValidationMessage For="() => UserData.Email" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="employmentdate" class="form-label">EmploymentDate:</label> 
+                <InputDate id="employmentdate" @bind-Value="UserData.EmploymentDate" class="form-control" /> 
+                <ValidationMessage For="() => UserData.EmploymentDate" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="salaray" class="form-label">Salaray:</label> 
+                <InputNumber id="salaray" @bind-Value="UserData.Salary" class="form-control" />
+                <ValidationMessage For="() => UserData.Salary" class="text-danger" />
+            </div>        
+            <div class="mb-3">
+                <label for="usercategory_id" class="form-label">UserCategory_Id:</label> 
+                <InputNumber id="usercategory_id" @bind-Value="UserData.UserCategory_Id" class="form-control" /> 
+                <ValidationMessage For="() => UserData.UserCategory_Id" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/userdata">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public UserData UserData { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddUserData()
+    {
+        DB.UserDatas.Add(UserData);
+        await DB.SaveChangesAsync();
+        NavigationManager.NavigateTo("/userdata");
+    }
+}

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BlazorSQLData.Model;
+namespace BlazorServerAppSQL.Model;
 
 
 public class UserData
@@ -15,5 +15,13 @@ public class UserData
 
     [Required]
     [StringLength(50)]
+    [EmailAddress]
     public string Email { get; set; } = string.Empty;
+
+    public DateTime? EmploymentDate { get; set; }
+
+    public decimal? Salary { get; set; } 
+
+    public int? UserCategory_Id { get; set; }
+
 }

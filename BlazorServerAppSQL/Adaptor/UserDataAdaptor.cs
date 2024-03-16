@@ -1,4 +1,4 @@
-﻿using BlazorSQLData.Model;
+﻿using BlazorServerAppSQL.Model;
 using Microsoft.EntityFrameworkCore;
 using Syncfusion.Blazor;
 using Syncfusion.Blazor.Data;

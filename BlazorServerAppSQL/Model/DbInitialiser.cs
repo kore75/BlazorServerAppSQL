@@ -1,4 +1,4 @@
-﻿using BlazorSQLData.Model;
+﻿using BlazorServerAppSQL.Model;
 
 namespace BlazorServerAppSQL.Model;
 
@@ -13,6 +13,12 @@ public class DbInitialiser
 
     public void Run()
     {
-        _context.Database.EnsureCreated();
+        if(_context.Database.EnsureCreated())
+        {
+            _context.UserCategories.Add(new UserCategory() { Name = "Developer" });
+            _context.UserCategories.Add(new UserCategory() { Name = "Guest" });
+            _context.UserCategories.Add(new UserCategory() { Name = "Manager" });
+            _context.SaveChanges();
+        }
     }
 }

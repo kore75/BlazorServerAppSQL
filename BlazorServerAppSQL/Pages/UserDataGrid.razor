@@ -1,26 +1,39 @@
 ﻿@page "/userdatagrid"
 @using BlazorServerAppSQL.Components
+@using Microsoft.EntityFrameworkCore
 
 
 @inject BookingDataContext Context
 <h3>UserDataGrid</h3>
 
-<SfGrid DataSource="@UserDatas" AllowPaging="true" AllowFiltering="true" AllowGrouping="true" AllowSorting="true" Toolbar="@ToolbarItems">
+<SfGrid DataSource="@UserDatas" AllowPaging="true" AllowFiltering="true" AllowSorting="true" Toolbar="@ToolbarItems">
     <SfDataManager  Adaptor="Adaptors.CustomAdaptor">
         <UserDataComponent />         
     </SfDataManager>
     <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true"></GridEditSettings>
+     <GridColumns>
+        <GridColumn Field=@nameof(UserData.UserDataId) HeaderText="#ID" IsIdentity="true" AllowAdding="false" AllowEditing="false" IsPrimaryKey="true" TextAlign="TextAlign.Left" Width="100"></GridColumn>
+        <GridColumn Field=@nameof(UserData.FullName) HeaderText="Name" TextAlign="TextAlign.Right" ></GridColumn>
+        <GridColumn Field=@nameof(UserData.Email) HeaderText="Email" TextAlign="TextAlign.Right"  ></GridColumn>
+        <GridColumn Field=@nameof(UserData.Salary) HeaderText="Salary" TextAlign="TextAlign.Right" Format="C2" ></GridColumn>
+        <GridColumn Field=@nameof(UserData.EmploymentDate) HeaderText="Entry Date" TextAlign="TextAlign.Right" ></GridColumn>
+        <GridForeignColumn Field=@nameof(UserData.UserCategory_Id) ForeignKeyField="UserCategoryId" HeaderText="Category" ForeignKeyValue="Name" ForeignDataSource="@UserCategories" />
+
+    </GridColumns>
 </SfGrid>
 
 @code {
     private List<string> ToolbarItems = new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel" };
 
     public List<UserData> UserDatas { get; set; } = new List<UserData>();
-   
+    public List<UserCategory> UserCategories { get; set; } = new List<UserCategory>();
 
-    protected override Task OnInitializedAsync()
-    {       
-        return base.OnInitializedAsync();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        UserCategories.AddRange(await Context.UserCategories.ToListAsync());
+        await base.OnInitializedAsync();
     }
 
    
