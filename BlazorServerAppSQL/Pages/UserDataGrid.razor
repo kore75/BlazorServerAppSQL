@@ -7,6 +7,7 @@
 <h3>UserDataGrid</h3>
 
 <SfGrid DataSource="@UserDatas" AllowPaging="true" AllowFiltering="true" AllowSorting="true" Toolbar="@ToolbarItems">
+    <GridPageSettings PageSizes="true" PageSize="8"></GridPageSettings>
     <SfDataManager  Adaptor="Adaptors.CustomAdaptor">
         <UserDataComponent />         
     </SfDataManager>

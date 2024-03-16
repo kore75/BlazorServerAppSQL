@@ -41,10 +41,18 @@ else
                     <label for="salaray" class="form-label">Salary:</label>
                     <InputNumber id="salaray" @bind-Value="UserData.Salary" class="form-control" />
                     <ValidationMessage For="() => UserData.Salary" class="text-danger" />
-                </div>
+                </div>               
                 <div class="mb-3">
-                    <label for="usercategory_id" class="form-label">UserCategory_Id:</label>
-                    <InputNumber id="usercategory_id" @bind-Value="UserData.UserCategory_Id" class="form-control" />
+                    <label for="User Category" class="form-label">UserCategory_Id:</label>
+                    <InputSelect id="usercategory" @bind-Value="UserData.UserCategory_Id" class="form-control" >
+                        @if (UserCategories!=null)
+                        {
+                            @foreach (var userData in UserCategories)
+                            {
+                                <option value="@userData.UserCategoryId">@userData.Name</option>
+                            }
+                        }
+                    </InputSelect>
                     <ValidationMessage For="() => UserData.UserCategory_Id" class="text-danger" />
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
@@ -64,9 +72,12 @@ else
     [SupplyParameterFromForm]
     public UserData? UserData { get; set; }
 
+    public List<UserCategory>? UserCategories { get; set; } 
+
     protected override async Task OnInitializedAsync()
     {
         UserData ??= await DB.UserDatas.FirstOrDefaultAsync(m => m.UserDataId == UserDataId);
+        UserCategories = await DB.UserCategories.ToListAsync();
 
         if (UserData is null)
         {

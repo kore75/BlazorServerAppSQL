@@ -1,6 +1,7 @@
 ﻿@page "/userdata/create"
 @inject BlazorServerAppSQL.Model.BookingDataContext DB
 @using BlazorServerAppSQL.Model
+@using Microsoft.EntityFrameworkCore
 @inject NavigationManager NavigationManager
 
 <PageTitle>Create</PageTitle>
@@ -30,15 +31,23 @@
                 <ValidationMessage For="() => UserData.EmploymentDate" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="salaray" class="form-label">Salaray:</label> 
+                <label for="salaray" class="form-label">Salary:</label>
                 <InputNumber id="salaray" @bind-Value="UserData.Salary" class="form-control" />
                 <ValidationMessage For="() => UserData.Salary" class="text-danger" />
             </div>        
             <div class="mb-3">
-                <label for="usercategory_id" class="form-label">UserCategory_Id:</label> 
-                <InputNumber id="usercategory_id" @bind-Value="UserData.UserCategory_Id" class="form-control" /> 
-                <ValidationMessage For="() => UserData.UserCategory_Id" class="text-danger" /> 
-            </div>        
+                <label for="User Category" class="form-label">UserCategory_Id:</label>
+                <InputSelect id="usercategory" @bind-Value="UserData.UserCategory_Id" class="form-control">
+                    @if (UserCategories != null)
+                    {
+                        @foreach (var userData in UserCategories)
+                        {
+                            <option value="@userData.UserCategoryId">@userData.Name</option>
+                        }
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => UserData.UserCategory_Id" class="text-danger" />
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -52,6 +61,13 @@
 
     [SupplyParameterFromForm]
     public UserData UserData { get; set; } = new();
+    public List<UserCategory>? UserCategories { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        UserCategories = await DB.UserCategories.ToListAsync();
+        await base.OnInitializedAsync();
+    }
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public async Task AddUserData()

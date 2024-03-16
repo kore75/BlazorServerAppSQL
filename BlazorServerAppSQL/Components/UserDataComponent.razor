@@ -15,7 +15,7 @@
         int TotalRecordsCount = await Context.UserDatas.AsNoTracking().CountAsync();
         IQueryable<UserData> userDatas = Context.UserDatas.AsNoTracking();
 
-        
+
 
         if (dataManagerRequest.Search != null && dataManagerRequest.Search.Count > 0)
         {
@@ -77,6 +77,21 @@
             return changedUserData;
         }
         throw new IndexOutOfRangeException();
+    }
+
+    // Performs Remove operation
+    public override object Remove(DataManager dataManager, object value, string keyField, string key)
+    {
+        if (value != null)
+        {
+            UserData udata = new UserData { UserDataId = int.Parse(value.ToString()) };
+            Context.UserDatas.Attach(udata);
+            Context.Entry(udata).State = EntityState.Deleted;
+            Context.SaveChanges();
+            Context.Entry(udata).State = EntityState.Detached;
+        }
+
+        return value;
     }
 
 }

@@ -1,4 +1,5 @@
 ﻿@page "/userdata"
+@using BlazorServerAppSQL.ViewModel
 @using Microsoft.AspNetCore.Components.QuickGrid
 @inject BlazorServerAppSQL.Model.BookingDataContext DB
 @using BlazorServerAppSQL.Model
@@ -8,19 +9,51 @@
 <h1>Index</h1>
 
 <p>
-    <a href="userdata/create">Create New</a>
+    <a class="btn btn-info" href="userdata/create">Create New</a>
 </p>
+<div class="grid">
+    <QuickGrid Class="table table-striped table-bordered" Items="GetUserDataDtos()" Pagination="@pagination">
+        <PropertyColumn Property="userdata => userdata.FullName" Sortable="true">
+            <ColumnOptions>
+                <div class="search-box">
+                    <input type="search" autofocus @bind="NameFilter" @bind:event="oninput" placeholder="Namen..." />
+                </div>
+            </ColumnOptions>
+        </PropertyColumn>
+        <PropertyColumn Property="userdata => userdata.Email" Sortable="true" />
+        <PropertyColumn Property="userdata => userdata.EmploymentDate" Sortable="true" />
+        <PropertyColumn Property="userdata => userdata.Salary" />
+        <PropertyColumn Property="userdata => userdata.UserCategory" Sortable="true" />
 
-<QuickGrid Class="table" Items="DB.UserDatas">
-    <PropertyColumn Property="userdata => userdata.FullName" />
-    <PropertyColumn Property="userdata => userdata.Email" />
-    <PropertyColumn Property="userdata => userdata.EmploymentDate" />
-    <PropertyColumn Property="userdata => userdata.Salary" />
-    <PropertyColumn Property="userdata => userdata.UserCategory_Id" />
+        <TemplateColumn Context="userdata">
+            <a class="btn btn-success" href="@($"userdata/edit?userdataid={userdata.UserDataId}")">Edit</a> |
+            <a class="btn btn-info" href="@($"userdata/details?userdataid={userdata.UserDataId}")">Details</a> |
+            <a class="btn btn-danger" href="@($"userdata/delete?userdataid={userdata.UserDataId}")">Delete</a>
+        </TemplateColumn>
+    </QuickGrid>
+</div>
+<Paginator State="@pagination" />
+@code {
+    PaginationState pagination = new PaginationState { ItemsPerPage = 8 };
 
-    <TemplateColumn Context="userdata">
-        <a href="@($"userdata/edit?userdataid={userdata.UserDataId}")">Edit</a> |
-        <a href="@($"userdata/details?userdataid={userdata.UserDataId}")">Details</a> |
-        <a href="@($"userdata/delete?userdataid={userdata.UserDataId}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+    public string NameFilter { get; set; } = string.Empty;
+
+    private IQueryable<UserDataDto> GetUserDataDtos()
+    {
+        ViewModelBooking viewModelBooking = new ViewModelBooking(DB);
+        var query = viewModelBooking.GetUserDataDtos();
+
+        if (!string.IsNullOrEmpty(NameFilter))
+        {
+            query = query.Where(c => c.FullName.Contains(NameFilter));
+        }
+
+        return query;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await base.OnInitializedAsync();
+    }
+}
