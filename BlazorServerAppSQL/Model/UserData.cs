@@ -6,6 +6,7 @@ namespace BlazorSQLData.Model;
 public class UserData
 {
     [Key]
+    [Editable(false)]
     public int UserDataId { get; set; }
 
     [Required]
