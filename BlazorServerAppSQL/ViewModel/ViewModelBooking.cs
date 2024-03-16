@@ -20,17 +20,18 @@ public class ViewModelBooking
         public IQueryable<UserDataDto> GetUserDataDtos()
     {      
         var userDtos=(from ud in _context.UserDatas.AsNoTracking() join
-                     cd in _context.UserCategories.AsNoTracking().DefaultIfEmpty() on
-                     ud.UserCategory_Id equals cd.UserCategoryId
-                     select new UserDataDto 
+                     cd in _context.UserCategories.AsNoTracking() on
+                     ud.UserCategory_Id equals cd.UserCategoryId into gj
+                     from subgroup in gj.DefaultIfEmpty()
+                      select new UserDataDto 
                      { 
                          Email=ud.Email, 
                          EmploymentDate=ud.EmploymentDate, 
                          FullName=ud.FullName, 
                          Salary=ud.Salary, 
                          UserDataId=ud.UserDataId,
-                         UserCategory=cd.Name
-                     });
+                         UserCategory= subgroup.Name
+                      });
 
         return userDtos;
 
