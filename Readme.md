@@ -1,6 +1,6 @@
 # Blazor Server App 
 
-The idia was the create a Web Application using established Tool to create a basic table editing functionlity.
+The idea was the create a Web Application using established Tool to create a basic table editing functionlity.
 
 The clean code pattern approach, would be over engineering for simple crude operation, without the need of business logic.
 
